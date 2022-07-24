@@ -1,10 +1,11 @@
 import requests
+import cloudscraper
 
 import re
 from garmin_uploader import logger
 
 URL_HOSTNAME = 'https://connect.garmin.com/modern/auth/hostname'
-URL_LOGIN = 'https://sso.garmin.com/sso/login'
+URL_LOGIN = 'https://sso.garmin.com/sso/signin'
 URL_POST_LOGIN = 'https://connect.garmin.com/modern/'
 URL_PROFILE = 'https://connect.garmin.com/modern/currentuser-service/user/info'  # noqa
 URL_HOST_SSO = 'sso.garmin.com'
@@ -41,10 +42,7 @@ class GarminAPI:
         """
         # Use a valid Browser user agent
         # TODO: use several UA picked randomly
-        session = requests.Session()
-        session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/50.0',  # noqa
-        })
+        session = cloudscraper.create_scraper()
 
         # Request sso hostname
         sso_hostname = None

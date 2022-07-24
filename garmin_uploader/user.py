@@ -1,4 +1,5 @@
 import os.path
+import time
 try:
     # Python 3
     from configparser import ConfigParser
@@ -56,20 +57,26 @@ class User(object):
                             "or home directory {}.  Use login options.".format(
                                 CONFIG_FILE, cwd, homepath))
 
-    def authenticate(self):
+    def authenticate(self, force=False):
         """
         Authenticate on Garmin API
         """
+        if self.session is not None and not force:
+            # return the cached session unless we are forcing authentication
+            # this will help with tests so we don't constantly try to reauthenticate
+            return self.session
         logger.info('Try to login on GarminConnect...')
         logger.debug('Username: {}'.format(self.username))
         logger.debug('Password: {}'.format('*'*len(self.password)))
 
         api = GarminAPI()
-        try:
-            self.session = api.authenticate(self.username, self.password)
-            logger.debug('Login Successful.')
-        except Exception as e:
-            logger.critical('Login Failure: {}'.format(e))
-            return False
+        for _ in range(3):
+            try:
+                self.session = api.authenticate(self.username, self.password)
+                logger.debug('Login Successful.')
+                return True
+            except Exception as e:
+                logger.critical('Login Failure: {}'.format(e))
+                time.sleep(10)
 
-        return True
+        return False
