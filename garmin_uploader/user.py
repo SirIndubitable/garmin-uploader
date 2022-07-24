@@ -62,8 +62,8 @@ class User(object):
         Authenticate on Garmin API
         """
         if self.session is not None and not force:
-            # return the cached session unless we are forcing authentication
-            # this will help with tests so we don't constantly try to reauthenticate
+            # return cached session unless we're forcing authentication this
+            # will help keep test from constantly trying to reauthenticate
             return self.session
         logger.info('Try to login on GarminConnect...')
         logger.debug('Username: {}'.format(self.username))
