@@ -1,19 +1,20 @@
-import os.path
-import glob
 import csv
+import glob
+import os.path
 import time
+
 import six
-from garmin_uploader import (
-    logger, VALID_GARMIN_FILE_EXTENSIONS, BINARY_FILE_FORMATS
-)
-from garmin_uploader.user import User
+
+from garmin_uploader import BINARY_FILE_FORMATS, VALID_GARMIN_FILE_EXTENSIONS, logger
 from garmin_uploader.api import GarminAPI, GarminAPIException
+from garmin_uploader.user import User
 
 
 class Activity(object):
     """
     Garmin Connect Activity model
     """
+
     def __init__(self, path, name=None, type=None):
         self.id = None  # provided on upload
         self.path = path
@@ -24,9 +25,9 @@ class Activity(object):
         if self.id is None:
             out = self.name or self.filename
         else:
-            out = '{} : {}'.format(self.id, self.name or self.filename)
+            out = "{} : {}".format(self.id, self.name or self.filename)
         if six.PY3 and isinstance(out, bytes):
-            return out.decode('utf8')
+            return out.decode("utf8")
         else:
             return out
 
@@ -58,15 +59,15 @@ class Activity(object):
         if six.PY3:
             return filename
         try:
-            return filename.encode('ascii')
+            return filename.encode("ascii")
         except UnicodeEncodeError:
-            return filename.decode('ascii', 'ignore')
+            return filename.decode("ascii", "ignore")
 
     def open(self):
         """
         Open local activity file as a file descriptor
         """
-        mode = self.extension in BINARY_FILE_FORMATS and 'rb' or 'r'
+        mode = self.extension in BINARY_FILE_FORMATS and "rb" or "r"
         return open(self.path, mode)
 
     def upload(self, user):
@@ -80,33 +81,33 @@ class Activity(object):
         try:
             self.id, uploaded = api.upload_activity(user.session, self)
         except GarminAPIException as e:
-            logger.warning('Upload failure: {}'.format(e))
+            logger.warning("Upload failure: {}".format(e))
             return False
 
         if uploaded:
-            logger.info('Uploaded activity {}'.format(self))
+            logger.info("Uploaded activity {}".format(self))
 
             # Set activity name if specified
             if self.name:
                 try:
                     api.set_activity_name(user.session, self)
                 except GarminAPIException as e:
-                    logger.warning('Activity name update failed: {}'.format(e))
+                    logger.warning("Activity name update failed: {}".format(e))
 
             # Set activity type if specified
             if self.type:
                 try:
                     api.set_activity_type(user.session, self)
                 except GarminAPIException as e:
-                    logger.warning('Activity type update failed: {}'.format(e))
+                    logger.warning("Activity type update failed: {}".format(e))
 
         else:
-            logger.info('Activity already uploaded {}'.format(self))
+            logger.info("Activity already uploaded {}".format(self))
 
         return True
 
 
-class Workflow():
+class Workflow:
     """
     Upload workflow:
      * List activities according to CLI args
@@ -115,8 +116,7 @@ class Workflow():
      * Upload activities
     """
 
-    def __init__(self, paths, username=None, password=None,
-                 activity_type=None, activity_name=None, verbose=3):
+    def __init__(self, paths, username=None, password=None, activity_type=None, activity_name=None, verbose=3):
         self.last_request = None
         logger.setLevel(level=verbose * 10)
 
@@ -142,18 +142,18 @@ class Workflow():
         """
 
         def is_csv(filename):
-            '''
+            """
             check to see if file exists and that the file
             extension is .csv
-            '''
+            """
             extension = os.path.splitext(filename)[1].lower()
-            return extension == '.csv' and os.path.isfile(filename)
+            return extension == ".csv" and os.path.isfile(filename)
 
         def is_activity(filename):
-            '''
+            """
             check to see if file exists and that the extension is a
             valid activity file accepted by GC.
-            '''
+            """
             if not os.path.isfile(filename):
                 logger.warning("File '{}' does not exist. Skipping...".format(filename))  # noqa
                 return False
@@ -167,7 +167,9 @@ class Workflow():
                 logger.debug("File '{}' extension '{}' is valid.".format(filename, extension))  # noqa
                 return True
             else:
-                logger.warning("File '{}' extension '{}' is not valid. Skipping file...".format(filename, extension))  # noqa
+                logger.warning(
+                    "File '{}' extension '{}' is not valid. Skipping file...".format(filename, extension)
+                )  # noqa
                 return False
 
         valid_paths, csv_files = [], []
@@ -186,35 +188,29 @@ class Workflow():
                 # Use files in directory
                 # - Does not recursively drill into directories.
                 # - Does not search for csv files in directories.
-                valid_paths += [
-                    f for f in glob.glob(os.path.join(path, '*'))
-                    if is_activity(f)
-                ]
+                valid_paths += [f for f in glob.glob(os.path.join(path, "*")) if is_activity(f)]
 
         # Activity name given on command line only applies if a single filename
         # is given.  Otherwise, ignore.
         if len(valid_paths) != 1 and self.activity_name:
-            logger.warning('-a option valid only when one fitness file given. Ignoring -a option.')  # noqa
+            logger.warning("-a option valid only when one fitness file given. Ignoring -a option.")  # noqa
             self.activity_name = None
 
         # Build activities from valid paths
-        activities = [
-           Activity(p, self.activity_name, self.activity_type)
-           for p in valid_paths
-        ]
+        activities = [Activity(p, self.activity_name, self.activity_type) for p in valid_paths]
 
-        # Pull in file info from csv files and apppend activities
+        # Pull in file info from csv files and append activities
         for csv_file in csv_files:
-            with open(csv_file, 'r') as csvfile:
+            with open(csv_file, "r") as csvfile:
                 reader = csv.DictReader(csvfile)
                 activities += [
-                    Activity(row['filename'], row['name'], row['type'])
+                    Activity(row["filename"], row["name"], row["type"])
                     for row in reader
-                    if is_activity(row['filename'])
+                    if is_activity(row["filename"])
                 ]
 
         if len(activities) == 0:
-            raise Exception('No valid files.')
+            raise Exception("No valid files.")
 
         return activities
 
@@ -224,13 +220,13 @@ class Workflow():
         Simply login & upload every activity
         """
         if not self.user.authenticate():
-            raise Exception('Invalid credentials')
+            raise Exception("Invalid credentials")
 
         for activity in self.activities:
             self.rate_limit()
             activity.upload(self.user)
 
-        logger.info('All done.')
+        logger.info("All done.")
 
     def rate_limit(self):
         min_period = 1
