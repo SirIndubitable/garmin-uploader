@@ -227,9 +227,8 @@ class Workflow:
             self.last_request = 0.0
 
         wait_time = max(0, min_period - (time.time() - self.last_request))
-        if wait_time <= 0:
-            return
-        time.sleep(wait_time)
+        if wait_time > 0:
+            logger.info("Rate limited for %f" % wait_time)
+            time.sleep(wait_time)
 
         self.last_request = time.time()
-        logger.info("Rate limited for %f" % wait_time)
