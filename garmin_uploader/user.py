@@ -53,8 +53,8 @@ class User(object):
             cwd = os.path.abspath(os.path.normpath("./"))
             homepath = os.path.expanduser(os.path.normpath("~/"))
             raise Exception(
-                "'{}' file does not exist in current directory {}"
-                "or home directory {}.  Use login options.".format(CONFIG_FILE, cwd, homepath)
+                "'{}' file does not exist in current directory {} or home directory {}.  "
+                "Use login options.".format(CONFIG_FILE, cwd, homepath)
             )
 
     def authenticate(self, force=False):
