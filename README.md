@@ -12,7 +12,7 @@ This is an up to date version of [GCPUploader](https://github.com/dlotton/GcpUpl
 Requirements
 ------------
 
-Tested on Python 2.7 and Python 3.5
+Tested on Python 3.7-3.10
 
 [![Build Status](https://travis-ci.org/La0/garmin-uploader.svg?branch=master)](https://travis-ci.org/La0/garmin-uploader)
 
@@ -35,7 +35,6 @@ pip install garmin-uploader
 Required Python Modules: (automatically installed by pip)
 
  * requests
- * six
 
 
 Garmin Connect Account

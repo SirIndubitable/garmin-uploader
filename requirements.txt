@@ -1,4 +1,3 @@
-cloudscraper==1.2.46
-pre-commit==1.21.0
+cloudscraper==1.2.60
+pre-commit==2.20.0
 requests>=2.10.0
-six>=1.10.0

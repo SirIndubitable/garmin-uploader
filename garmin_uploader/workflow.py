@@ -3,8 +3,6 @@ import glob
 import os.path
 import time
 
-import six
-
 from garmin_uploader import BINARY_FILE_FORMATS, VALID_GARMIN_FILE_EXTENSIONS, logger
 from garmin_uploader.api import GarminAPI, GarminAPIException
 from garmin_uploader.user import User
@@ -26,7 +24,8 @@ class Activity(object):
             out = self.name or self.filename
         else:
             out = "{} : {}".format(self.id, self.name or self.filename)
-        if six.PY3 and isinstance(out, bytes):
+
+        if isinstance(out, bytes):
             return out.decode("utf8")
         else:
             return out
@@ -55,13 +54,7 @@ class Activity(object):
         non-asterisked filename parameter) is to always send an ascii encodable
         filename.  This is achieved by parsing out the non-ascii characters.
         """
-        filename = os.path.basename(self.path)
-        if six.PY3:
-            return filename
-        try:
-            return filename.encode("ascii")
-        except UnicodeEncodeError:
-            return filename.decode("ascii", "ignore")
+        return os.path.basename(self.path)
 
     def open(self):
         """

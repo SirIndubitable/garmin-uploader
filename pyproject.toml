@@ -13,16 +13,14 @@ known_third_party = [
     'pytest',
     'requests',
     'setuptools',
-    'six',
 ]
 
 
 [tool.black]
 line-length = 120
 target-version = [
-    'py27',
-    'py35',
-    'py36',
     'py37',
     'py38',
+    'py39',
+    'py310',
 ]
