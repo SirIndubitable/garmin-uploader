@@ -215,8 +215,8 @@ class GarminAPI:
         Fetch valid activity types from Garmin Connect
         """
         # Only fetch once
-        if self.activity_types:
-            return self.activity_types
+        if GarminAPI.activity_types:
+            return GarminAPI.activity_types
 
         logger.debug("Fetching activity types")
         resp = requests.get(URL_ACTIVITY_TYPES, headers=self.common_headers)
@@ -225,10 +225,10 @@ class GarminAPI:
 
         # Store as a clean dict, mapping keys and lower case common name
         types = resp.json()
-        self.activity_types = {t["typeKey"]: t for t in types}
+        GarminAPI.activity_types = {t["typeKey"]: t for t in types}
 
-        logger.debug("Fetched {} activity types".format(len(self.activity_types)))  # noqa
-        return self.activity_types
+        logger.debug("Fetched {} activity types".format(len(GarminAPI.activity_types)))  # noqa
+        return GarminAPI.activity_types
 
     def set_activity_type(self, session, activity):
         """
