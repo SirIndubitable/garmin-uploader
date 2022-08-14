@@ -90,7 +90,7 @@
         single_gas_diving
 
     Examples:
-        Upload file and set activty name:
+        Upload file and set activity name:
             gupload -u myusername -p mypassword -a 'Run at park - 12/23' myfile.tcx
 
         Upload multiple files:

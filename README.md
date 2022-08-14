@@ -1,8 +1,8 @@
 Garmin Uploader
 ===============
 
-Garmin Uploader (aka gupload), uploads files 
-(.tcx, .gpx, and .fit files ) created by Garmin fitness 
+Garmin Uploader (aka gupload), uploads files
+(.tcx, .gpx, and .fit files ) created by Garmin fitness
 devices to the http://connect.garmin.com web site.
 
 :star: Yes, it works with the latest (~~April 2018~~ ~~April 2019~~ ~~January 2021~~ ~~February 2021~~ May 2021) Garmin connect authentication update.
@@ -19,7 +19,7 @@ Tested on Python 2.7 and Python 3.5
 Install
 -------
 
-You can install garmin-uploader as any othe package availale on PyPi with pip:
+You can install garmin-uploader as any other package available on PyPi with pip:
 
 
 On Linux
@@ -42,19 +42,19 @@ Garmin Connect Account
 -----------------------
 You must already have a Garmin Connect account set up.  If you
 don't have one, go to https://connect.garmin.com and create your
-user account.  The login credentials (username or email and password) for this account are 
+user account.  The login credentials (username or email and password) for this account are
 required for uploading data to Garmin Connect.
 
 
 Config File:
 -----------
 You may create a config file containing your Garmin Connect
-username and password to eliminate the need to type it in 
-on the command line.  
+username and password to eliminate the need to type it in
+on the command line.
 
  :warning: WARNING!!! The username and password
-are stored in clear text, WHICH IS NOT SECURE.  If you have 
-concerns about storing your garmin connect username and 
+are stored in clear text, WHICH IS NOT SECURE.  If you have
+concerns about storing your garmin connect username and
 password in an unsecure file, do not use this option.
 
 Create a text file named .guploadrc (gupload.ini for Windows
@@ -68,11 +68,11 @@ password=<password>
 
 Replace <username> and <password> with your Garmin Connect
 login credentials.  gupload looks for this file either in
-your home directory (usually something like '/home/<username>' 
+your home directory (usually something like '/home/<username>'
 in Linux, or C:\Documents and Settings\<username>' in Windows)
-, or in the current working directory (the directory you are 
-in when you execute gupload).  See help below for priority 
-information. 
+, or in the current working directory (the directory you are
+in when you execute gupload).  See help below for priority
+information.
 
 
 Help
